@@ -28,7 +28,7 @@ const NeoCard: React.FC<NeoCardProps> = ({
         relative 
         border-4 border-black 
         ${bgColor} 
-        ${isPlayful ? 'rounded-3xl shadow-neo' : 'shadow-neo'}
+        ${isPlayful ? 'rounded-neo-lg shadow-neo-lg' : 'shadow-neo'}
         ${animateOnHover ? 'hover:animate-wiggle' : ''}
         hover:shadow-neo-hover 
         hover:-translate-x-1 
@@ -36,14 +36,14 @@ const NeoCard: React.FC<NeoCardProps> = ({
         transition-all 
         duration-200 
         p-6 
-        ${onClick ? 'cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' : ''}
+        ${onClick ? 'cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-none' : ''}
         ${className}
       `}
         >
             {title && (
                 <div className={`
                     border-b-4 border-black -mx-6 -mt-6 p-4 mb-6 font-black uppercase tracking-wider
-                    ${isPlayful ? 'bg-neo-yellow text-black rounded-t-[20px]' : 'bg-black text-white'}
+                    ${isPlayful ? 'bg-neo-yellow text-black rounded-t-[28px]' : 'bg-black text-white'}
                 `}>
                     {title}
                 </div>

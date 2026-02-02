@@ -8,16 +8,16 @@ This app is now split into two parts:
 
 1.  Push your code to GitHub.
 2.  Go to [Render Dashboard](https://dashboard.render.com).
-3.  Click **New +** -> **Web Service**.
+3.  Click **New +** -> **Blueprint**.
 4.  Connect your GitHub repository.
-5.  **Root Directory**: Set to `server`.
-6.  **Build Command**: `npm install`
-7.  **Start Command**: `node index.js`
-8.  **Environment Variables**:
-    -   `PORT`: `3001` (or let Render assign one, usually PORT is auto-assigned)
-    -   Add `CORS_ORIGIN` if you implemented strict CORS (optional for now).
-9.  Click **Create Web Service**.
-10. Copy the **Service URL** (e.g., `https://watch-party-server.onrender.com`).
+5.  Render will automatically use the `render.yaml` file to set up your service.
+6.  Wait for the deployment to finish.
+7.  Copy the **Service URL** (e.g., `https://watch-party-backend.onrender.com`).
+
+**Alternative (Manual Web Service):**
+- **Root Directory**: (Leave blank)
+- **Build Command**: `npm install`
+- **Start Command**: `npm run start:server`
 
 ## 2. Frontend Deployment (Vercel)
 
