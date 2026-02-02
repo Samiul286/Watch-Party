@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useWebRTC } from '@/hooks/useWebRTC';
 import { useSocket } from '@/hooks/useSocket';
 import { User } from '@/types';
+import NeoCard from './NeoCard';
 
 interface VideoCallProps {
     roomId: string;
@@ -40,8 +41,6 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
     useEffect(() => {
         if (localStream && localVideoRef.current) {
             localVideoRef.current.srcObject = localStream;
-            
-            // Ensure local video plays
             localVideoRef.current.play().catch(err => {
                 console.error('Error playing local video:', err);
             });
@@ -52,7 +51,6 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (!document.hidden && localVideoRef.current && localStream) {
-                // Resume video playback when page becomes visible
                 localVideoRef.current.play().catch(err => {
                     console.error('Error resuming local video:', err);
                 });
@@ -64,55 +62,34 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
     }, [localStream]);
 
     useEffect(() => {
-        // Only proceed if we have local stream ready
-        if (!localStream) {
-            console.log('Waiting for local stream before initiating calls');
-            return;
-        }
-
-        // Get current user IDs
+        if (!localStream) return;
         const currentUserIds = new Set(users.map(u => u.id));
-        
-        // Clean up tracking for users who are no longer in the room
         const trackedUserIds = Array.from(callInitiatedFor.current);
+
         trackedUserIds.forEach(trackedId => {
             if (!currentUserIds.has(trackedId) && trackedId !== userId) {
-                console.log(`Removing tracking for disconnected user: ${trackedId}`);
                 callInitiatedFor.current.delete(trackedId);
             }
         });
 
-        // Start calls with other users
-        // Use ID comparison to determine who initiates the call to avoid glare (collision)
-        // consistently: the user with the lower string ID initiates.
         users.forEach(user => {
             if (user.id !== userId && !callInitiatedFor.current.has(user.id)) {
-                // Determine initiator
                 const shouldInitiate = userId < user.id;
-                
                 if (shouldInitiate) {
-                    console.log(`I should initiate call to ${user.id} (I am ${userId})`);
                     callInitiatedFor.current.add(user.id);
-                    // Add a small delay to ensure both sides are ready
                     setTimeout(() => {
                         startCall(user.id);
                     }, 500);
-                } else {
-                    console.log(`Waiting for call from ${user.id} (I am ${userId})`);
                 }
             }
         });
     }, [users, userId, startCall, localStream]);
 
-    // Listen for user-connected events to initiate calls immediately
     useEffect(() => {
         if (!localStream || !socket) return;
 
         const handleUserConnected = (connectedUserId: string) => {
-            console.log(`User connected event: ${connectedUserId}`);
-            
             if (connectedUserId !== userId && userId < connectedUserId && !callInitiatedFor.current.has(connectedUserId)) {
-                console.log(`Initiating call to newly connected user ${connectedUserId}`);
                 callInitiatedFor.current.add(connectedUserId);
                 setTimeout(() => {
                     startCall(connectedUserId);
@@ -121,8 +98,6 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
         };
 
         const handleUserDisconnected = (disconnectedUserId: string) => {
-            console.log(`User disconnected event in VideoCall: ${disconnectedUserId}`);
-            // Clean up the call tracking for this user
             callInitiatedFor.current.delete(disconnectedUserId);
         };
 
@@ -143,27 +118,34 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             <div className="flex items-center justify-between px-2">
-                <div className="flex items-center gap-2">
-                    <span className="text-xl">👩‍❤️‍👨</span>
-                    <h3 className="font-extrabold text-[18px] text-couple-text">Our Private Space</h3>
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-neo-yellow border-4 border-black flex items-center justify-center transform -rotate-3 shadow-neo-sm">
+                        <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
+                    </div>
+                    <h3 className="font-black text-xl uppercase tracking-tighter">Live Cams</h3>
                 </div>
-                <div className="love-glass-pill py-1">
-                    <span className="text-[10px] font-black uppercase text-couple-pink animate-pulse">Live Now</span>
+                <div className="bg-neo-pink text-white border-4 border-black px-4 py-1 animate-pulse shadow-neo-sm">
+                    <span className="text-[10px] font-black uppercase tracking-widest">ON AIR</span>
                 </div>
             </div>
 
             {permissionError ? (
-                <div className="love-card p-8 text-center bg-couple-soft/30 border-dashed border-2 border-couple-pink/20">
-                    <p className="text-couple-text font-bold mb-4">I can't see your beautiful face!</p>
-                    <button onClick={() => window.location.reload()} className="love-button-primary px-6 h-10 inline-flex">Allow Access</button>
-                </div>
+                <NeoCard variant="playful" bgColor="bg-neo-yellow/20" className="p-12 text-center border-dashed">
+                    <p className="font-black uppercase mb-6">Camera Access Required!</p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="bg-neo-pink text-white border-4 border-black px-8 py-3 font-black uppercase shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5"
+                    >
+                        Allow Access
+                    </button>
+                </NeoCard>
             ) : (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                     {/* Local Video */}
-                    <div className="flex flex-col gap-2">
-                        <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-love group border-2 border-white">
+                    <div className="flex flex-col gap-3">
+                        <div className="relative aspect-video border-4 border-black bg-black shadow-neo overflow-hidden group">
                             <video
                                 ref={localVideoRef}
                                 autoPlay
@@ -171,16 +153,16 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
                                 muted
                                 className="w-full h-full object-cover mirror transform transition-transform group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
                             {!isVideoEnabled && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-couple-text/80 backdrop-blur-sm">
-                                    <span className="text-4xl animate-heartbeat text-couple-pink">❤️</span>
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                                    <div className="w-16 h-16 bg-neo-pink border-4 border-black flex items-center justify-center rotate-45 animate-wiggle">
+                                        <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" /></svg>
+                                    </div>
                                 </div>
                             )}
                         </div>
                         <div className="flex justify-center">
-                            <span className="text-[12px] font-black uppercase text-couple-pink shadow-sm">You (My Love)</span>
+                            <span className="bg-white border-2 border-black px-3 py-0.5 font-black uppercase text-[10px]">YOU</span>
                         </div>
                     </div>
 
@@ -188,13 +170,12 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
                     {Object.entries(remoteStreams).map(([peerId, stream]) => {
                         const remoteUser = users.find(u => u.id === peerId);
                         return (
-                            <div key={peerId} className="flex flex-col gap-2">
-                                <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-love group border-2 border-white">
+                            <div key={peerId} className="flex flex-col gap-3">
+                                <div className="relative aspect-video border-4 border-black bg-black shadow-neo overflow-hidden group">
                                     <RemoteVideo stream={stream} />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </div>
                                 <div className="flex justify-center">
-                                    <span className="text-[12px] font-black uppercase text-couple-pink shadow-sm">{remoteUser?.username || 'Soulmate'}</span>
+                                    <span className="bg-neo-cyan border-2 border-black px-3 py-0.5 font-black uppercase text-[10px]">{remoteUser?.username || 'GUEST'}</span>
                                 </div>
                             </div>
                         );
@@ -202,43 +183,43 @@ export default function VideoCall({ roomId, userId, users, onLeave }: VideoCallP
 
                     {/* Placeholder for waiting */}
                     {Object.keys(remoteStreams).length === 0 && users.length > 1 && (
-                        <div className="relative aspect-video rounded-[32px] overflow-hidden bg-couple-soft flex flex-col items-center justify-center border-4 border-white border-dashed">
-                            <div className="w-12 h-12 rounded-full border-2 border-couple-pink border-t-transparent animate-spin mb-3"></div>
-                            <span className="text-[10px] font-black uppercase text-couple-pink">Waiting for your love...</span>
+                        <div className="relative aspect-video bg-neo-yellow/10 flex flex-col items-center justify-center border-4 border-black border-dashed">
+                            <div className="w-12 h-12 bg-neo-pink border-4 border-black animate-spin mb-4"></div>
+                            <span className="text-[12px] font-black uppercase tracking-widest text-black">connecting...</span>
                         </div>
                     )}
                 </div>
             )}
 
             {/* Control Strip */}
-            <div className="flex justify-center pt-2">
-                <div className="bg-white/80 backdrop-blur-xl p-2 sm:p-2.5 rounded-[20px] sm:rounded-[24px] border border-couple-soft flex items-center gap-3 sm:gap-4 px-4 sm:px-8 shadow-love-lg">
+            <div className="flex justify-center pt-4">
+                <div className="bg-white border-4 border-black p-2 flex items-center gap-4 px-6 shadow-neo-lg">
                     <button
                         onClick={toggleAudio}
-                        className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-[14px] sm:rounded-[18px] transition-all ${isAudioEnabled ? 'bg-couple-soft text-couple-text' : 'bg-couple-pink text-white shadow-lg shadow-couple-pink/40'}`}
+                        className={`w-12 h-12 flex items-center justify-center border-4 border-black transition-all ${isAudioEnabled ? 'bg-neo-cyan hover:bg-neo-cyan/80' : 'bg-neo-pink text-black'}`}
                     >
                         {isAudioEnabled ? (
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+                            <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zM17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" /></svg>
                         ) : (
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
+                            <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24"><path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.17c0-.06.02-.11.02-.17V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.17l5.98 6zm3.97 3.97l-1.41-1.41-1.42-1.42L5.41 4.59 4 6l5 5v1c0 1.66 1.34 3 3 3 .35 0 .68-.06 1-.17l4.07 4.07c-.4.21-.84.39-1.3.5v3h2v-3c.27-.06.53-.15.78-.25l2.42 2.42 1.41-1.41-5.97-5.97z" /></svg>
                         )}
                     </button>
                     <button
                         onClick={toggleVideo}
-                        className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-[14px] sm:rounded-[18px] transition-all ${isVideoEnabled ? 'bg-couple-soft text-couple-text' : 'bg-couple-pink text-white shadow-lg shadow-couple-pink/40'}`}
+                        className={`w-12 h-12 flex items-center justify-center border-4 border-black transition-all ${isVideoEnabled ? 'bg-neo-cyan hover:bg-neo-cyan/80' : 'bg-neo-pink text-black'}`}
                     >
                         {isVideoEnabled ? (
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                            <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" /></svg>
                         ) : (
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                            <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24"><path d="M18 10.48V6c0-1.1-.9-2-2-2H6.83l2 2H16v7.17l2 2v-4.69zM4.27 3L3 4.27l2.85 2.85L5 8v10c0 1.1.9 2 2 2h10c.22 0 .44-.04.64-.12l2.09 2.09L21 20.73 4.27 3z" /></svg>
                         )}
                     </button>
-                    <div className="w-[1px] h-6 sm:h-8 bg-couple-soft"></div>
+                    <div className="w-1 h-8 bg-black"></div>
                     <button
                         onClick={handleEndNight}
-                        className="love-button-primary h-9 sm:h-11 px-4 sm:px-6 rounded-[14px] sm:rounded-[16px] text-[10px] sm:text-xs uppercase tracking-widest font-black"
+                        className="bg-neo-pink text-white border-4 border-black px-6 h-12 font-black uppercase tracking-widest shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5"
                     >
-                        End Night
+                        Exit
                     </button>
                 </div>
             </div>
@@ -253,8 +234,6 @@ function RemoteVideo({ stream }: { stream: MediaStream }) {
     useEffect(() => {
         if (videoRef.current && stream) {
             videoRef.current.srcObject = stream;
-            
-            // Ensure video plays after stream is set
             const playVideo = async () => {
                 try {
                     await videoRef.current?.play();
@@ -264,12 +243,9 @@ function RemoteVideo({ stream }: { stream: MediaStream }) {
                     setIsPlaying(false);
                 }
             };
-            
             playVideo();
 
-            // Monitor track status
             const handleTrackEnded = () => {
-                console.log('Remote track ended');
                 setIsPlaying(false);
             };
 
@@ -294,10 +270,10 @@ function RemoteVideo({ stream }: { stream: MediaStream }) {
                 className="w-full h-full object-cover transform transition-transform group-hover:scale-105"
             />
             {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center bg-couple-text/80 backdrop-blur-sm">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm">
                     <div className="text-center">
-                        <div className="w-12 h-12 rounded-full border-2 border-couple-pink border-t-transparent animate-spin mb-2 mx-auto"></div>
-                        <span className="text-xs text-white font-bold">Reconnecting...</span>
+                        <div className="w-12 h-12 border-4 border-neo-cyan border-t-transparent animate-spin mb-4 mx-auto"></div>
+                        <span className="text-xs text-white font-black uppercase tracking-widest">Reconnecting...</span>
                     </div>
                 </div>
             )}

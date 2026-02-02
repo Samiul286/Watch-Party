@@ -5,6 +5,7 @@ import { useRoom } from '@/hooks/useRoom';
 import VideoPlayer from '@/components/VideoPlayer';
 import Chat from '@/components/Chat';
 import VideoCall from '@/components/VideoCall';
+import NeoCard from '@/components/NeoCard';
 
 export default function Room() {
   const router = useRouter();
@@ -61,11 +62,13 @@ export default function Room() {
 
   if (!roomId || !username) {
     return (
-      <div className="min-h-screen bg-couple-background flex flex-col items-center justify-center">
-        <div className="w-16 h-16 bg-couple-pink rounded-full flex items-center justify-center animate-beat text-white shadow-love">
-          ❤️
+      <div className="min-h-screen bg-neo-yellow flex flex-col items-center justify-center p-6">
+        <div className="w-24 h-24 bg-white border-8 border-black rounded-3xl flex items-center justify-center animate-wiggle shadow-neo">
+          <span className="text-4xl">🚀</span>
         </div>
-        <p className="mt-6 font-bold text-couple-text tracking-widest uppercase text-sm animate-pulse">Entering our world...</p>
+        <p className="mt-8 font-black text-black tracking-[0.2em] uppercase text-xl text-center">
+          ENTERING THE <span className="bg-neo-pink text-white px-2">PARTY ZONE</span>...
+        </p>
       </div>
     );
   }
@@ -79,7 +82,6 @@ export default function Room() {
         await navigator.clipboard.writeText(textToCopy);
         success = true;
       } else {
-        // Fallback for non-HTTPS or unsupported browsers
         const textArea = document.createElement("textarea");
         textArea.value = textToCopy;
         textArea.style.position = "fixed";
@@ -101,8 +103,8 @@ export default function Room() {
 
     if (success) {
       const notification = document.createElement('div');
-      notification.className = 'fixed top-12 left-1/2 transform -translate-x-1/2 px-8 py-3 bg-white/90 backdrop-blur-xl rounded-full shadow-love-lg z-[100] font-bold text-[15px] animate-fade-up border border-couple-soft flex items-center gap-2';
-      notification.innerHTML = `<span class="text-couple-pink">💋</span> Invite link copied!`;
+      notification.className = 'fixed top-12 left-1/2 transform -translate-x-1/2 px-8 py-4 bg-neo-green border-4 border-black shadow-neo-sm z-[100] font-black text-sm animate-wiggle flex items-center gap-3';
+      notification.innerHTML = `<span class="text-xl">🔥</span> LINK COPIED TO CLIPBOARD!`;
       document.body.appendChild(notification);
       setTimeout(() => {
         notification.style.opacity = '0';
@@ -113,98 +115,59 @@ export default function Room() {
   };
 
   return (
-    <div className="min-h-screen bg-couple-background font-love pb-20">
+    <div className="min-h-screen bg-neo-yellow font-mono pb-20 selection:bg-black selection:text-neo-yellow">
       <Head>
-        <title>Our Cinema Night - {roomId}</title>
+        <title>WATCH PARTY | {roomId}</title>
       </Head>
 
-      {/* Love Nav Bar */}
-      <header className="love-nav-bar ring-1 ring-white/20 h-14 sm:h-16 px-3 sm:px-6">
-        <button
-          onClick={() => { leaveRoom(); router.push('/'); }}
-          className="flex items-center gap-1 sm:gap-2 text-couple-text font-bold hover:text-couple-pink transition-colors"
-        >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
-          <span className="hidden xs:inline text-sm sm:text-base">Home</span>
-        </button>
-
-        <div className="flex flex-col items-center">
-          <h2 className="font-extrabold text-[15px] sm:text-[18px] text-couple-text leading-tight uppercase tracking-tight">Our Secret Night</h2>
-          <span className="text-[8px] sm:text-[10px] uppercase font-black tracking-[0.15em] text-couple-pink bg-couple-soft px-2 rounded-full">Private Room</span>
+      {/* Neo-Brutalist Nav Bar */}
+      <header className="sticky top-0 z-50 bg-white border-b-4 border-black h-16 sm:h-20 px-4 sm:px-8 flex items-center justify-between shadow-neo-sm">
+        <div className="flex items-center gap-4">
+          <NeoCard
+            variant="standard"
+            bgColor="bg-neo-pink"
+            className="p-1 px-3 cursor-pointer"
+            onClick={() => { leaveRoom(); router.push('/'); }}
+          >
+            <span className="text-white font-black text-xs">EXIT</span>
+          </NeoCard>
+          <div className="hidden sm:block">
+            <h1 className="font-black text-xl uppercase tracking-tighter italic">Watch Party <span className="text-neo-pink">V2</span></h1>
+          </div>
         </div>
 
-        <button
-          onClick={copyRoomId}
-          className="love-button-primary h-9 sm:h-10 px-3 sm:px-6 rounded-full text-[10px] sm:text-xs tracking-tight sm:tracking-normal"
-        >
-          Invite <span className="hidden xs:inline">My Love</span>
-        </button>
+        <div className="flex flex-col items-center">
+          <div className="bg-black text-white px-4 py-1 transform -rotate-1 shadow-neo-sm">
+            <h2 className="font-black text-sm sm:text-lg uppercase tracking-widest">ROOM: {roomId}</h2>
+          </div>
+        </div>
+
+        <div className="hidden xs:block">
+          <NeoCard
+            variant="standard"
+            bgColor="bg-neo-cyan"
+            className="p-1 px-4 cursor-pointer"
+            onClick={copyRoomId}
+          >
+            <span className="font-black text-xs uppercase">INVITE OTHERS</span>
+          </NeoCard>
+        </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 animate-fade-up pb-10">
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+      <main className="max-w-[1600px] mx-auto p-4 sm:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-          {/* 1. Video Player (Col 8) */}
-          <div className="w-full lg:col-span-8 lg:order-1">
-            <div className="space-y-6">
-              <VideoPlayer
-                videoState={videoState}
-                onStateChange={updateVideoState}
-                userId={userId}
-              />
-            </div>
-          </div>
+          {/* Main Content Area: Video and Cams */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Video Section */}
+            <VideoPlayer
+              videoState={videoState}
+              onStateChange={updateVideoState}
+              userId={userId}
+            />
 
-          {/* 2. Chat & Sidebar (Col 4) */}
-          <div className="w-full lg:col-span-4 lg:order-2 lg:sticky lg:top-24 space-y-6 lg:space-y-10">
-            <div className="h-[250px] sm:h-[550px] lg:h-[calc(100vh-250px)]">
-              <Chat
-                messages={messages}
-                onSendMessage={sendMessage}
-                currentUserId={userId}
-              />
-            </div>
-
-            {/* Togetherness Card */}
-            <div className="love-card p-5 sm:p-6 hidden sm:block">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="font-black text-[16px] sm:text-[18px] text-couple-text">Together Now</h3>
-                  <p className="text-[10px] font-black text-couple-pink uppercase tracking-widest">Always better with you</p>
-                </div>
-                <div className="bg-couple-soft text-couple-pink w-10 h-10 rounded-full flex items-center justify-center font-black">
-                  {users.length}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {users.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-3 rounded-[20px] bg-couple-soft/30 border border-white/40">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-couple-pink to-couple-deep flex items-center justify-center text-white font-black text-xs shadow-md">
-                        {user.username.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <span className="font-bold text-[14px] block text-couple-text">
-                          {user.username} {user.id === userId && "(Me)"}
-                        </span>
-                        <span className="text-[10px] font-black text-couple-secondary opacity-60 uppercase tracking-tighter">
-                          {user.id === userId ? 'Directing' : 'Enjoying'}
-                        </span>
-                      </div>
-                    </div>
-                    {user.id === userId && (
-                      <div className="w-2 h-2 bg-couple-pink rounded-full animate-pulse shadow-[0_0_10px_#FF2D55]"></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Video Call (Col 8) - Wraps to next row on desktop */}
-          <div className="w-full lg:col-span-8 lg:order-3">
-            <div className="love-card p-4 sm:p-6">
+            {/* Video Call Section */}
+            <NeoCard variant="playful" className="bg-white p-4 sm:p-8">
               <VideoCall
                 roomId={roomId as string}
                 userId={userId}
@@ -214,11 +177,68 @@ export default function Room() {
                   router.push('/');
                 }}
               />
-            </div>
+            </NeoCard>
           </div>
 
+          {/* Sidebar Area: Chat and Info */}
+          <div className="lg:col-span-4 flex flex-col gap-8">
+            <div className="h-[400px] sm:h-[600px] lg:h-[700px]">
+              <Chat
+                messages={messages}
+                onSendMessage={sendMessage}
+                currentUserId={userId}
+              />
+            </div>
+
+            {/* Room Info Card */}
+            <NeoCard variant="playful" bgColor="bg-neo-green" className="p-6">
+              <div className="flex items-center justify-between mb-4 border-b-4 border-black pb-2">
+                <h3 className="font-black text-lg uppercase">Room Stats</h3>
+                <div className="bg-white border-2 border-black px-3 py-1 font-black text-sm">
+                  {users.length} ONLINE
+                </div>
+              </div>
+
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                {users.map((user) => (
+                  <div key={user.id} className="flex items-center justify-between p-3 bg-white border-4 border-black shadow-neo-sm transform hover:scale-[1.02] transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 border-4 border-black flex items-center justify-center text-white font-black text-xs ${user.id === userId ? 'bg-neo-pink' : 'bg-neo-purple'
+                        }`}>
+                        {user.username.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <span className="font-black text-sm block">
+                          {user.username} {user.id === userId && "(YOU)"}
+                        </span>
+                        <span className="text-[10px] font-black opacity-40 uppercase">
+                          {user.id === userId ? 'HOSTING' : 'WATCHING'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`w-3 h-3 border-2 border-black rounded-full ${user.id === userId ? 'bg-neo-pink animate-pulse' : 'bg-neo-green'}`}></div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 pt-6 border-t-4 border-black/10">
+                <p className="text-[10px] font-black uppercase text-black/40 text-center tracking-widest">
+                  SECURE &bull; PEER-TO-PEER &bull; ENCRYPTED
+                </p>
+              </div>
+            </NeoCard>
+          </div>
         </div>
       </main>
+
+      {/* Footer Branding */}
+      <footer className="mt-12 text-center pb-8 opacity-20 hover:opacity-100 transition-opacity">
+        <div className="inline-block bg-black text-white px-6 py-2 border-4 border-white shadow-neo">
+          <p className="font-black uppercase text-xs tracking-[0.3em]">Watch Party V2 &bull; Neo-Brutalism</p>
+        </div>
+      </footer>
     </div>
+  );
+}
   );
 }

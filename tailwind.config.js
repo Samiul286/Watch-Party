@@ -8,17 +8,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        couple: {
-          pink: '#FF2D55',
-          rose: '#FF375F',
-          soft: '#FFEFF4',
-          gold: '#FFD700',
-          deep: '#8E24AA',
-          background: '#FFF5F7',
-          card: '#FFFFFF',
-          text: '#4A148C',
-          secondary: '#7B1FA2',
-        },
         neo: {
           yellow: '#FFD700',
           pink: '#FF2D55',
@@ -26,22 +15,25 @@ module.exports = {
           green: '#00FF41',
           black: '#000000',
           white: '#FFFFFF',
+          purple: '#A855F7',
+          orange: '#F97316',
+          blue: '#3B82F6',
         }
       },
       fontFamily: {
-        'love': ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', '"Space Mono"', 'monospace'],
+        'display': ['"Plus Jakarta Sans"', 'sans-serif'],
       },
       borderRadius: {
-        'love': '24px',
-        'love-lg': '32px',
-        'love-pill': '9999px',
+        'neo': '24px',
+        'neo-lg': '32px',
+        'neo-xl': '40px',
       },
       boxShadow: {
-        'love': '0 10px 30px -5px rgba(255, 45, 85, 0.15)',
-        'love-lg': '0 20px 40px -10px rgba(255, 45, 85, 0.25)',
         'neo': '8px 8px 0px 0px rgba(0, 0, 0, 1)',
         'neo-hover': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
         'neo-sm': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
+        'neo-lg': '12px 12px 0px 0px rgba(0, 0, 0, 1)',
       },
       borderWidth: {
         '3': '3px',
@@ -52,6 +44,7 @@ module.exports = {
         'float': 'float 3s ease-in-out infinite',
         'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
         'fade-up': 'fade-up 0.5s ease-out forwards',
+        'wiggle': 'wiggle 0.3s ease-in-out infinite',
       },
       keyframes: {
         float: {
@@ -65,6 +58,10 @@ module.exports = {
         'fade-up': {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'wiggle': {
+          '0%, 100%': { transform: 'rotate(-1deg)' },
+          '50%': { transform: 'rotate(1deg)' },
         }
       },
     },

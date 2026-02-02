@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -17,60 +17,44 @@ body {
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
-  background-color: #FFF5F7;
-  color: #4A148C;
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: #FFD700; /* neo-yellow */
+  color: #000000;
   min-height: 100vh;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(255, 45, 85, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(142, 36, 170, 0.05) 0px, transparent 50%);
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Syne', sans-serif;
+  }
 }
 
 @layer components {
-  .love-card {
-    @apply bg-white/80 backdrop-blur-xl border border-white/40 rounded-[24px] shadow-love overflow-hidden transition-all duration-300;
+  .neo-input {
+    @apply w-full px-6 py-4 bg-white border-4 border-black text-black font-black uppercase tracking-widest outline-none transition-all duration-200 focus:bg-neo-cyan focus:translate-x-1 focus:translate-y-1 focus:shadow-none shadow-neo-sm;
   }
 
-  .love-button {
-    @apply h-14 flex items-center justify-center rounded-[18px] font-bold text-[16px] transition-all duration-300 active:scale-95;
+  .neo-label {
+    @apply text-sm font-black text-black mb-2 block uppercase tracking-[0.2em] ml-1;
   }
 
-  .love-button-primary {
-    @apply love-button bg-gradient-to-r from-couple-pink to-couple-rose text-white shadow-love hover:shadow-love-lg hover:-translate-y-0.5;
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-3;
   }
 
-  .love-button-secondary {
-    @apply love-button bg-white text-couple-pink border-2 border-couple-soft hover:bg-couple-soft;
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
   }
 
-  .love-input {
-    @apply w-full px-6 py-4 bg-couple-soft/50 border-2 border-transparent rounded-[18px] text-[16px] outline-none transition-all focus:border-couple-pink/30 focus:bg-white focus:shadow-sm;
-    color: #4A148C;
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-black border-2 border-white rounded-none;
   }
-
-  .love-label {
-    @apply text-[14px] font-bold text-couple-secondary mb-2 block uppercase tracking-widest ml-1;
-  }
-
-  .love-nav-bar {
-    @apply sticky top-0 z-50 w-full h-16 flex items-center justify-between px-6 bg-white/70 backdrop-blur-md border-b border-couple-soft;
-  }
-
-  .love-glass-pill {
-    @apply bg-white/60 backdrop-blur-sm border border-white/40 rounded-full px-4 py-2 shadow-sm;
-  }
-
-  .love-badge {
-    @apply px-2 py-0.5 rounded-full text-[11px] font-black uppercase tracking-tighter;
-  }
-}
-
-.heart-bg {
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
-  mask-repeat: no-repeat;
-  mask-size: contain;
 }
 
 .mirror {
   transform: scaleX(-1);
+}
+
+::selection {
+  @apply bg-black text-neo-yellow;
 }

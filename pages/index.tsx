@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import NeoCard from '../components/NeoCard';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
@@ -27,72 +28,73 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-couple-background relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F3F4F6] font-mono relative overflow-hidden">
       <Head>
-        <title>Watch Party - Together Forever</title>
+        <title>Watch Party - NEO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       </Head>
 
-      {/* Decorative Hearts */}
-      <div className="absolute top-[10%] left-[5%] animate-float opacity-20">
-        <svg className="w-16 h-16 text-couple-pink" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+      {/* Decorative Shapes */}
+      <div className="absolute top-[10%] left-[5%] animate-float opacity-40">
+        <div className="w-16 h-16 bg-neo-cyan border-4 border-black rotate-12 shadow-neo-sm"></div>
       </div>
-      <div className="absolute bottom-[15%] right-[8%] animate-float opacity-10" style={{ animationDelay: '1s' }}>
-        <svg className="w-24 h-24 text-couple-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+      <div className="absolute bottom-[15%] right-[8%] animate-float opacity-30" style={{ animationDelay: '1s' }}>
+        <div className="w-24 h-24 bg-neo-yellow border-4 border-black -rotate-12 shadow-neo-sm rounded-full"></div>
+      </div>
+      <div className="absolute top-[20%] right-[10%] animate-wiggle opacity-20">
+        <div className="w-12 h-12 bg-neo-pink border-4 border-black rotate-45 shadow-neo-sm"></div>
       </div>
 
       <div className="w-full max-w-lg z-10 animate-fade-up">
         {/* Header Section */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-white/50 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/40 mb-6 animate-heartbeat">
-            <span className="text-couple-pink">❤️</span>
-            <span className="text-[12px] font-bold uppercase tracking-widest text-couple-secondary">Made for us</span>
+          <div className="inline-flex items-center gap-2 bg-neo-purple text-white px-4 py-1.5 border-4 border-black shadow-neo-sm mb-6 animate-heartbeat">
+            <span className="font-black uppercase tracking-widest text-[12px]">Version 2.0</span>
           </div>
-          <h1 className="text-[42px] leading-tight font-black text-couple-text mb-4">
-            Our Private <br /><span className="text-couple-pink">Cinema</span> Night
+          <h1 className="text-[48px] leading-[0.9] font-black uppercase tracking-tighter text-black mb-4">
+            WATCH <br /><span className="bg-neo-pink text-white px-2 border-4 border-black">PARTY</span>
           </h1>
-          <p className="text-couple-secondary font-medium px-8 text-lg opacity-80">
-            Stream your favorite movies together, because every second is better with you.
+          <p className="font-bold text-lg text-black/80 max-w-xs mx-auto">
+            Sync movies. Chat bold. <br />No distractions.
           </p>
         </div>
 
-        {/* Auth Selection */}
-        <div className="love-card p-10 relative">
-          {/* Tabs */}
-          <div className="flex bg-couple-soft/50 p-1.5 rounded-[20px] mb-8">
+        {/* Tab Selection */}
+        <NeoCard variant="playful" className="p-8">
+          <div className="flex bg-black p-1 mb-8 border-4 border-black">
             <button
               onClick={() => setActiveTab('create')}
-              className={`flex-1 py-3 rounded-[16px] font-bold text-sm transition-all duration-300 ${activeTab === 'create' ? 'bg-white text-couple-pink shadow-sm' : 'text-couple-secondary opacity-60'}`}
+              className={`flex-1 py-3 font-black text-sm uppercase transition-all ${activeTab === 'create' ? 'bg-neo-yellow text-black' : 'text-white hover:bg-white/10'}`}
             >
-              Start New Night
+              New Room
             </button>
             <button
               onClick={() => setActiveTab('join')}
-              className={`flex-1 py-3 rounded-[16px] font-bold text-sm transition-all duration-300 ${activeTab === 'join' ? 'bg-white text-couple-pink shadow-sm' : 'text-couple-secondary opacity-60'}`}
+              className={`flex-1 py-3 font-black text-sm uppercase transition-all ${activeTab === 'join' ? 'bg-neo-yellow text-black' : 'text-white hover:bg-white/10'}`}
             >
-              Enter Room
+              Join Room
             </button>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="love-label">Your Name</label>
+              <label className="block font-black uppercase text-sm mb-2">Display Name</label>
               <input
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="What is your name? ❤️"
-                className="love-input"
+                placeholder="TYPE YOUR NAME..."
+                className="w-full px-4 py-4 bg-white border-4 border-black font-black uppercase focus:bg-neo-cyan transition-colors outline-none shadow-neo-sm"
               />
             </div>
 
             {activeTab === 'join' && (
               <div className="animate-fade-up">
-                <label className="love-label">Secret Room Code</label>
+                <label className="block font-black uppercase text-sm mb-2">Room Code</label>
                 <input
                   value={roomId}
                   onChange={(e) => setRoomId(e.target.value)}
-                  placeholder="EX: LOVE-24"
-                  className="love-input italic uppercase tracking-widest"
+                  placeholder="EX: NEO-BRUTAL"
+                  className="w-full px-4 py-4 bg-white border-4 border-black font-black uppercase focus:bg-neo-yellow transition-colors outline-none shadow-neo-sm italic"
                 />
               </div>
             )}
@@ -100,29 +102,20 @@ export default function Home() {
             <button
               onClick={activeTab === 'create' ? createRoom : joinRoom}
               disabled={isLoading || !username.trim() || (activeTab === 'join' && !roomId.trim())}
-              className="love-button-primary w-full"
+              className={`
+                w-full py-5 font-black uppercase text-xl border-4 border-black transition-all
+                ${isLoading ? 'bg-gray-200 cursor-not-allowed' : 'bg-neo-green hover:shadow-neo hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 active:shadow-none'}
+              `}
             >
-              {isLoading ? (
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                activeTab === 'create' ? 'Create Our Sanctuary' : 'Join Our Sanctuary'
-              )}
+              {isLoading ? 'INITIATING...' : (activeTab === 'create' ? 'CREATE PARTY' : 'JOIN PARTY')}
             </button>
           </div>
-
-          {/* Special Decor */}
-          <div className="absolute -top-4 -right-4 w-12 h-12 bg-couple-pink rounded-full flex items-center justify-center text-white shadow-lg -rotate-12 border-4 border-white">
-            ✨
-          </div>
-        </div>
+        </NeoCard>
 
         {/* Footer */}
-        <div className="mt-12 text-center space-y-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-couple-secondary opacity-40">
-            Encrypted & Private for couples only
-          </p>
-          <p className="text-[12px] font-bold text-couple-secondary opacity-60">
-            Copyright © 2026 It'z Sami
+        <div className="mt-12 text-center">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-black">
+            © 2026 NEO-WATCH PARTY
           </p>
         </div>
       </div>

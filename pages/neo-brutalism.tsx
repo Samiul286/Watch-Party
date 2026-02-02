@@ -11,71 +11,81 @@ const NeoBrutalismShowcase = () => {
 
             <header className="mb-12">
                 <h1 className="text-6xl font-black uppercase tracking-tighter border-b-8 border-black pb-4 mb-4">
-                    Neo-Brutalism Card UI
+                    Neo-Brutalism UI
                 </h1>
                 <p className="text-xl font-bold bg-neo-yellow p-4 border-4 border-black inline-block">
-                    Minimal. Playful. Bold.
+                    Standard vs. Minimal & Playful
                 </p>
             </header>
 
-            <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                {/* Basic Card */}
-                <NeoCard title="Standard Card" bgColor="bg-white">
-                    <p className="text-lg">This is a standard Neo-Brutalism card with a white background and a header.</p>
-                    <button className="mt-6 px-6 py-3 border-4 border-black bg-neo-cyan font-bold uppercase shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition-all">
-                        Action Button
-                    </button>
-                </NeoCard>
+            <main className="space-y-16">
+                {/* Minimal & Playful Section */}
+                <section>
+                    <h2 className="text-4xl font-black uppercase mb-8 flex items-center gap-4">
+                        <span className="bg-neo-pink text-white px-3 py-1 border-4 border-black rounded-xl">NEW</span>
+                        Minimal & Playful
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <NeoCard
+                            variant="playful"
+                            title="Playful Card"
+                            bgColor="bg-white"
+                            animateOnHover={true}
+                        >
+                            <p className="text-lg">Rounded corners and a subtle wiggle animation make this feel much more playful and "bouncy".</p>
+                        </NeoCard>
 
-                {/* Playful Yellow Card */}
-                <NeoCard bgColor="bg-neo-yellow" className="rotate-1">
-                    <div className="flex flex-col gap-4">
-                        <h2 className="text-3xl font-black italic">WAKEY WAKEY!</h2>
-                        <p className="font-bold">Cards can be rotated slightly for a more playful, chaotic feel that is characteristic of neo-brutalism.</p>
-                    </div>
-                </NeoCard>
+                        <NeoCard
+                            variant="playful"
+                            bgColor="bg-neo-cyan"
+                            className="rotate-1"
+                            animateOnHover={true}
+                        >
+                            <h3 className="text-2xl font-black uppercase mb-2">Bouncy Cyan</h3>
+                            <p className="font-bold text-white">The border radius is quite large, giving it a modern app feel while keeping the brutalist edge.</p>
+                        </NeoCard>
 
-                {/* Pink Interactive Card */}
-                <NeoCard
-                    bgColor="bg-neo-pink"
-                    onClick={() => alert('Clicked!')}
-                    className="-rotate-1"
-                >
-                    <div className="text-white">
-                        <h2 className="text-3xl font-black uppercase mb-4">Click Me</h2>
-                        <p className="text-lg">This whole card is interactive. Notice the shadow shift and scale change when you click or hover.</p>
+                        <NeoCard
+                            variant="playful"
+                            bgColor="bg-neo-green"
+                            onClick={() => { }}
+                            animateOnHover={true}
+                        >
+                            <h3 className="text-2xl font-black uppercase mb-2">Interactive</h3>
+                            <p className="font-bold">Click this card! It has the same shadow logic but with rounded aesthetics.</p>
+                            <div className="mt-4 flex gap-2">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-white shadow-neo-sm"></div>
+                                ))}
+                            </div>
+                        </NeoCard>
                     </div>
-                </NeoCard>
+                </section>
 
-                {/* Cyan Card with Image Placeholder */}
-                <NeoCard bgColor="bg-neo-cyan" title="With Image">
-                    <div className="w-full h-48 bg-black border-4 border-black mb-4 flex items-center justify-center text-white font-black text-2xl">
-                        IMAGE AREA
-                    </div>
-                    <p className="font-bold">Neo-brutalism loves high contrast images and bold boundaries.</p>
-                </NeoCard>
+                <hr className="border-t-8 border-black border-dashed opacity-20" />
 
-                {/* Green Success Card */}
-                <NeoCard bgColor="bg-neo-green" className="lg:col-span-2">
-                    <div className="flex items-center gap-8">
-                        <div className="text-6xl font-black">!</div>
-                        <div>
-                            <h2 className="text-4xl font-black uppercase mb-2">Notice Me</h2>
-                            <p className="text-xl font-bold">A wide card layout. Perfect for banners or important announcements in your app.</p>
-                        </div>
-                    </div>
-                </NeoCard>
+                {/* Standard Neo-Brutalism Section */}
+                <section>
+                    <h2 className="text-4xl font-black uppercase mb-8">Standard Brutalist</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 opacity-80">
+                        <NeoCard title="Standard Card" bgColor="bg-white">
+                            <p className="text-lg">The classic square-edged look with heavy shadows.</p>
+                            <button className="mt-6 px-6 py-3 border-4 border-black bg-neo-cyan font-bold uppercase shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition-all">
+                                Action Button
+                            </button>
+                        </NeoCard>
 
-                {/* Dark Mode Style */}
-                <NeoCard bgColor="bg-black" className="text-white border-neo-white">
-                    <h2 className="text-3xl font-black uppercase text-neo-green mb-4">Dark Style</h2>
-                    <p className="font-bold opacity-80">Even in black, the high-contrast borders and shadows stand out.</p>
-                    <div className="mt-8 flex gap-4">
-                        <div className="w-8 h-8 bg-neo-pink border-2 border-neo-white"></div>
-                        <div className="w-8 h-8 bg-neo-cyan border-2 border-neo-white"></div>
-                        <div className="w-8 h-8 bg-neo-yellow border-2 border-neo-white"></div>
+                        <NeoCard bgColor="bg-black" className="text-white">
+                            <h3 className="text-2xl font-black uppercase text-neo-yellow mb-2">Dark Mode</h3>
+                            <p className="font-bold opacity-80">High contrast, sharp edges, and deep shadows define the original style.</p>
+                        </NeoCard>
+
+                        <NeoCard bgColor="bg-neo-pink">
+                            <h3 className="text-2xl font-black uppercase text-white mb-2">Loud & Bold</h3>
+                            <p className="font-bold text-white">Strong colors and no-nonsense geometry.</p>
+                        </NeoCard>
                     </div>
-                </NeoCard>
+                </section>
             </main>
 
             <footer className="mt-20 pt-8 border-t-8 border-black text-center">
